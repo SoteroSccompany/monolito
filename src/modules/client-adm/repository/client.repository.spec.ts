@@ -26,25 +26,25 @@ describe('ClientRepository', () => {
     });
 
     it('should create a client', async () => {
-        // Arrange
         const client = new Client({
             id: new Id('123'),
             name: 'Client Name',
             email: 'client@test',
-            addres: 'Client Addres'
+            addres: 'Client Addres',
+            createdAt: new Date(),
+            updatedAt: new Date()
         });
 
         const clientRepository = new ClientRepository();
         await clientRepository.add(client);
         const clientDb = await ClientModel.findOne({ where: { id: client.id.id } });
+        expect(clientDb).toBeDefined();
         expect(client.id.id).toEqual(clientDb.id);
         expect(client.name).toEqual(clientDb.name);
         expect(client.email).toEqual(clientDb.email);
         expect(client.addres).toEqual(clientDb.addres);
-        expect(client.createdAt).toBeDefined();
-        expect(client.updatedAt).toBeDefined();
-        // Act
-        // Assert
+        expect(client.createdAt).toStrictEqual(clientDb.createdAt);
+        expect(client.updatedAt).toStrictEqual(clientDb.updatedAt);
     });
 
     it('should find a client', async () => {
@@ -64,6 +64,9 @@ describe('ClientRepository', () => {
         expect(client.name).toBe('Client Name');
         expect(client.email).toBe('client@test');
         expect(client.addres).toBe('Client Addres');
+        expect(client.createdAt).toBeDefined();
+        expect(client.updatedAt).toBeDefined();
+
 
     });
 });

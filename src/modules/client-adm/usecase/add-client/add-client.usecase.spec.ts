@@ -1,4 +1,3 @@
-import Client from "../../domain/client.entity";
 import AddClientUsecase from "./add-client.usecase";
 
 

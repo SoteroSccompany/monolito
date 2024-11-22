@@ -1,16 +1,15 @@
 import Id from "../../../@shared/domain/value-object/id.value-object";
+import Client from "../../domain/client.entity";
 import FindClientUsecase from "./find-client.usecase";
 
 
 
-const client = {
+const client = new Client({
     id: new Id('123'),
     name: "John Doe",
     email: "asdasdsd",
-    addres: "1234 Main St",
-    createdAt: new Date(),
-    updatedAt: new Date()
-}
+    addres: "1234 Main St"
+});
 
 
 const MockRepository = () => {

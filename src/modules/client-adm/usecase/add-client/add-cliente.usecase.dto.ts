@@ -1,5 +1,6 @@
 
 export interface AddClienteUseCaseInputDto {
+    id?: string;
     name: string;
     email: string;
     addres: string;

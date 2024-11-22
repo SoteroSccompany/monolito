@@ -16,7 +16,13 @@ export default class AddClientUsecase implements UseCaseInterface {
 
     async execute(input: AddClienteUseCaseInputDto): Promise<AddClienteUseCaseOutputDto> {
         try {
-            const client = new Client({ id: new Id(), ...input });
+            const props = {
+                id: new Id(input.id) || new Id(),
+                name: input.name,
+                email: input.email,
+                addres: input.addres,
+            }
+            const client = new Client(props);
             await this._clientRepository.add(client);
             return {
                 id: client.id.id,

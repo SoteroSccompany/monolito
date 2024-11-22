@@ -14,8 +14,8 @@ export default class ClientRepository implements ClientGateway {
                 name: client.name,
                 email: client.email,
                 addres: client.addres,
-                createdAt: new Date(),
-                updatedAt: new Date()
+                createdAt: client.createdAt || new Date(),
+                updatedAt: client.updatedAt || new Date()
             });
         } catch (error) {
             throw new Error((error as Error).message);
@@ -33,7 +33,9 @@ export default class ClientRepository implements ClientGateway {
                 id: new Id(response.id),
                 name: response.name,
                 email: response.email,
-                addres: response.addres
+                addres: response.addres,
+                createdAt: response.createdAt,
+                updatedAt: response.updatedAt
             })
             return client;
         } catch (error) {

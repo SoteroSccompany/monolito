@@ -1,5 +1,5 @@
 import UseCaseInterface from "../../@shared/usecase/use-case.interface";
-import { GenerateInvoiceFacadeInputDto, FindInvoiceFacadeInputDto, FindInvoiceFacadeOutputDto } from "./invoice.facade.dto";
+import { GenerateInvoiceFacadeInputDto, FindInvoiceFacadeInputDto, FindInvoiceFacadeOutputDto, GenerateInvoiceFacadeOutPutDto } from "./invoice.facade.dto";
 import InvoiceFacadeInterface from "./invoice.facade.interface";
 
 
@@ -12,9 +12,18 @@ export default class InvoiceFacade implements InvoiceFacadeInterface {
     ) { }
 
 
-    async generateInvoice(input: GenerateInvoiceFacadeInputDto): Promise<void> {
+    async generateInvoice(input: GenerateInvoiceFacadeInputDto): Promise<GenerateInvoiceFacadeOutPutDto> {
         try {
-            await this._generateInvoice.execute(input);
+            const invoice = await this._generateInvoice.execute(input);
+            return {
+                id: invoice.id.id,
+                clientId: invoice.clientId,
+                items: invoice.items.map((item: { productId: string }) => {
+                    return {
+                        productId: item.productId
+                    }
+                })
+            }
         } catch (error) {
             throw new Error((error as Error).message);
         }

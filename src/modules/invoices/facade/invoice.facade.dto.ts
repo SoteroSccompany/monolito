@@ -8,6 +8,14 @@ export interface GenerateInvoiceFacadeInputDto {
     }[];
 }
 
+export interface GenerateInvoiceFacadeOutPutDto {
+    id: string;
+    clientId: string;
+    items: {
+        productId: string;
+    }[];
+}
+
 export interface FindInvoiceFacadeInputDto {
     id: string;
 }

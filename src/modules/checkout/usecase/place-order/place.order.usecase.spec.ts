@@ -152,19 +152,21 @@ describe("PlaceOrderUseCase unit test", () => {
 
         describe("place an order", () => {
             const clientProps = {
-                id: "1c",
+                clientId: "1c",
                 name: "Client 0",
                 email: "client@user.com",
-                street: "Client street",
-                number: "123",
-                complement: "Client complement",
-                city: "Client city",
-                state: "Client state",
-                zipCode: "12345678"
+                address: {
+                    street: "Client street",
+                    number: "123",
+                    complement: "Client complement",
+                    city: "Client city",
+                    state: "Client state",
+                    zipCode: "12345678"
+                }
             };
 
             const mockClientFacade = {
-                find: jest.fn().mockResolvedValue(clientProps),
+                find: jest.fn().mockResolvedValue(Promise.resolve(clientProps)),
                 add: jest.fn()
             };
 
@@ -241,7 +243,7 @@ describe("PlaceOrderUseCase unit test", () => {
                 expect(output.total).toBe(70);
                 expect(output.products).toStrictEqual([{ productId: "1" }, { productId: "2" }]);
                 expect(mockClientFacade.find).toHaveBeenCalledTimes(1);
-                expect(mockClientFacade.find).toHaveBeenCalledWith({ id: "ic" });
+                expect(mockClientFacade.find).toHaveBeenCalledWith({ clientId: "1c" });
                 expect(mockValidateProducts).toHaveBeenCalledTimes(1);
                 expect(mockValidateProducts).toHaveBeenCalledWith(input);
                 expect(mockGetProduct).toHaveBeenCalledTimes(2);
@@ -252,6 +254,56 @@ describe("PlaceOrderUseCase unit test", () => {
                     amount: output.total
                 })
                 expect(mockInvoiceFacade.generateInvoice).toHaveBeenCalledTimes(0);
+
+            });
+
+            it("should be approved", async () => {
+
+                mockPaymentFacade.process = mockPaymentFacade.process.mockReturnValue({
+                    transactionId: "1t",
+                    orderId: "1o",
+                    amount: 100,
+                    status: "approved",
+                    createdAt: new Date(),
+                    updatedAt: new Date()
+                })
+
+                const input: PlaceOrderInputDto = {
+                    clientId: "1c",
+                    products: [{ productId: "1" }, { productId: "2" }]
+                };
+
+                let output = await placeOrderUseCase.execute(input);
+
+                expect(output.invoiceId).toBe("1i");
+                expect(output.total).toBe(70);
+                expect(output.products).toStrictEqual([{ productId: "1" }, { productId: "2" }]);
+                expect(mockClientFacade.find).toHaveBeenCalledTimes(1);
+                expect(mockClientFacade.find).toHaveBeenCalledWith({ clientId: "1c" });
+                expect(mockValidateProducts).toHaveBeenCalledTimes(1);
+                expect(mockGetProduct).toHaveBeenCalledTimes(2);
+                expect(mockCheckoutRepository.addOrder).toHaveBeenCalledTimes(1);
+                expect(mockPaymentFacade.process).toHaveBeenCalledTimes(1);
+                expect(mockPaymentFacade.process).toHaveBeenCalledWith({
+                    orderId: output.id,
+                    amount: output.total
+                })
+                expect(mockInvoiceFacade.generateInvoice).toHaveBeenCalledTimes(1);
+                expect(mockInvoiceFacade.generateInvoice).toHaveBeenCalledWith({
+                    clientId: "1c",
+                    items: [
+                        {
+                            id: products["1"].id.id,
+                            name: products["1"].name,
+                            price: products["1"].salesPrice
+                        },
+                        {
+                            id: products["2"].id.id,
+                            name: products["2"].name,
+                            price: products["2"].salesPrice
+                        }
+                    ]
+                });
 
             });
 

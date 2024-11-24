@@ -18,11 +18,7 @@ export default class InvoiceFacade implements InvoiceFacadeInterface {
             return {
                 id: invoice.id.id,
                 clientId: invoice.clientId,
-                items: invoice.items.map((item: { productId: string }) => {
-                    return {
-                        productId: item.productId
-                    }
-                })
+                items: invoice.items
             }
         } catch (error) {
             throw new Error((error as Error).message);

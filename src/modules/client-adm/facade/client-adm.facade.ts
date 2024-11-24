@@ -1,4 +1,5 @@
 import UseCaseInterface from "../../@shared/usecase/use-case.interface";
+import Address from "../../@shared/value-object/address";
 import { AddClientFacadeInputDto, FindClientFacadeInputDto, FindClientFacadeOutputDto } from "./client-adm.facade.dto";
 import ClientAdmFacadeInterface from "./client-adm.facade.interface";
 
@@ -28,7 +29,7 @@ export default class ClientAdmFacade implements ClientAdmFacadeInterface {
             name: client.name,
             email: client.email,
             document: client.document,
-            address: client.address,
+            address: new Address(client.address.street, client.address.number, client.address.state, client.address.city, client.address.state, client.address.zipcode),
             createdAt: client.createdAt,
             updatedAt: client.updatedAt
         }

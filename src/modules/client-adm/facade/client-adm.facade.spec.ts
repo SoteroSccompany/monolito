@@ -60,7 +60,7 @@ describe("Cliente adm facade unit test", () => {
         expect(client.clientId).toBe(input.clientId);
         expect(client.name).toBe("Client 1");
         expect(client.email).toBe("client@test");
-        expect(client.addres).toBe("Client Addres");
+        expect(client.address).toBe("Client Addres");
 
     });
 

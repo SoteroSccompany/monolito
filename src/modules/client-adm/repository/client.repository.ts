@@ -1,46 +1,53 @@
+
 import Id from "../../@shared/domain/value-object/id.value-object";
+import Address from "../../@shared/value-object/address";
 import Client from "../domain/client.entity";
 import ClientGateway from "../gateway/client.gateway";
-import ClientModel from "./client.model";
-
+import { ClientModel } from "./client.model";
 
 export default class ClientRepository implements ClientGateway {
 
+    async add(entity: Client): Promise<void> {
 
-    async add(client: Client): Promise<void> {
-        try {
-            await ClientModel.create({
-                id: client.id.id,
-                name: client.name,
-                email: client.email,
-                addres: client.addres,
-                createdAt: client.createdAt || new Date(),
-                updatedAt: client.updatedAt || new Date()
-            });
-        } catch (error) {
-            throw new Error((error as Error).message);
-        }
+        await ClientModel.create({
+            id: entity.id.id,
+            name: entity.name,
+            email: entity.email,
+            document: entity.document,
+            street: entity.address.street,
+            number: entity.address.number,
+            complement: entity.address.complement,
+            city: entity.address.city,
+            state: entity.address.state,
+            zipcode: entity.address.zipCode,
+            createdAt: entity.createdAt,
+            updatedAt: entity.updatedAt
+        })
     }
-
 
     async find(id: string): Promise<Client> {
-        try {
-            const response = await ClientModel.findOne({ where: { id } });
-            if (!response) {
-                throw new Error(`Client with id ${id} not found`);
-            }
-            const client = new Client({
-                id: new Id(response.id),
-                name: response.name,
-                email: response.email,
-                addres: response.addres,
-                createdAt: response.createdAt,
-                updatedAt: response.updatedAt
-            })
-            return client;
-        } catch (error) {
-            throw new Error((error as Error).message);
-        }
-    }
 
+        const client = await ClientModel.findOne({ where: { id } })
+
+        if (!client) {
+            throw new Error("Client not found")
+        }
+
+        return new Client({
+            id: new Id(client.id),
+            name: client.name,
+            email: client.email,
+            document: client.document,
+            address: new Address(
+                client.street,
+                parseInt(client.number),
+                client.complement,
+                client.city,
+                client.state,
+                client.zipcode,
+            ),
+            createdAt: client.createdAt,
+            updatedAt: client.createdAt
+        })
+    }
 }

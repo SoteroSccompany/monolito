@@ -1,10 +1,10 @@
 import { Sequelize } from "sequelize-typescript";
 import InvoiceItemModel from "./invoice-item.model";
 import InvoiceModel from "./invoice.model";
-import Address from "../value-object/address";
 import InvoiceItem from "../domain/entity/invoice-item";
 import Invoice from "../domain/entity/invoice";
 import InvoiceRepository from "./invoice.repository";
+import Address from "../../@shared/value-object/address";
 
 
 

@@ -1,5 +1,5 @@
 import Id from "../../../@shared/domain/value-object/id.value-object";
-import Address from "../../value-object/address";
+import Address from "../../../@shared/value-object/address";
 import Invoice from "../entity/invoice";
 import InvoiceItem from "../entity/invoice-item";
 

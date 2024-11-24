@@ -1,6 +1,6 @@
-import Address from "../../value-object/address";
+
+import Address from "../../../@shared/value-object/address";
 import Invoice from "../entity/invoice";
-import InvoiceItem from "../entity/invoice-item";
 import InvoiceEntityFactory from "./entity.factory";
 
 

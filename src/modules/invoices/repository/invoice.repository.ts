@@ -1,9 +1,7 @@
 import Id from "../../@shared/domain/value-object/id.value-object";
 import Invoice from "../domain/entity/invoice";
-import InvoiceItem from "../domain/entity/invoice-item";
 import InvoiceEntityFactory from "../domain/factory/entity.factory";
 import InvoiceGateway from "../gateway/invoice.gateway";
-import Address from "../value-object/address";
 import InvoiceItemModel from "./invoice-item.model";
 import InvoiceModel from "./invoice.model";
 

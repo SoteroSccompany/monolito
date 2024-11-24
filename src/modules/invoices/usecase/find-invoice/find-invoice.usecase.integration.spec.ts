@@ -4,7 +4,7 @@ import InvoiceItemModel from "../../repository/invoice-item.model";
 import InvoiceModel from "../../repository/invoice.model";
 import InvoiceRepository from "../../repository/invoice.repository";
 import Invoice from "../../domain/entity/invoice";
-import Address from "../../value-object/address";
+import Address from "../../../@shared/value-object/address";
 import InvoiceItem from "../../domain/entity/invoice-item";
 import Id from "../../../@shared/domain/value-object/id.value-object";
 import FindInvoiceUsecase from "./find-invoice.usecase";

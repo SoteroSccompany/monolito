@@ -1,4 +1,5 @@
-import Address from "../../value-object/address";
+
+import Address from "../../../@shared/value-object/address";
 import Invoice from "./invoice";
 import InvoiceItem from "./invoice-item";
 

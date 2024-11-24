@@ -27,7 +27,7 @@ export default class ClientAdmFacade implements ClientAdmFacadeInterface {
             clientId: client.id,
             name: client.name,
             email: client.email,
-            addres: client.addres,
+            address: client.addres,
             createdAt: client.createdAt,
             updatedAt: client.updatedAt
         }

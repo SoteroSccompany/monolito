@@ -12,14 +12,7 @@ export default class FindInvoiceUsecase implements UseCaseInterface {
             const invoice = await this._repositoryInvoice.find(input.id);
             return {
                 id: invoice.id.id,
-                name: invoice.name,
-                document: invoice.document,
-                street: invoice.address.street,
-                number: invoice.address.number,
-                complement: invoice.address.complement,
-                city: invoice.address.city,
-                state: invoice.address.state,
-                zipCode: invoice.address.zipCode,
+                clientId: invoice.clientId,
                 items: invoice.items.map(item => {
                     return {
                         id: item.id.id,

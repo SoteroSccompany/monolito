@@ -1,5 +1,6 @@
 import Id from "../../../@shared/domain/value-object/id.value-object";
 import UseCaseInterface from "../../../@shared/usecase/use-case.interface";
+import Address from "../../../@shared/value-object/address";
 import Client from "../../domain/client.entity";
 import ClientGateway from "../../gateway/client.gateway";
 import { AddClienteUseCaseInputDto, AddClienteUseCaseOutputDto } from "./add-cliente.usecase.dto";
@@ -20,7 +21,8 @@ export default class AddClientUsecase implements UseCaseInterface {
                 id: new Id(input.id) || new Id(),
                 name: input.name,
                 email: input.email,
-                addres: input.addres,
+                document: input.document,
+                address: new Address(input.address.street, input.address.number, input.address.complement, input.address.city, input.address.state, input.address.zipCode)
             }
             const client = new Client(props);
             await this._clientRepository.add(client);
@@ -28,7 +30,8 @@ export default class AddClientUsecase implements UseCaseInterface {
                 id: client.id.id,
                 name: client.name,
                 email: client.email,
-                addres: client.addres,
+                document: client.document,
+                address: client.address,
                 createdAt: client.createdAt,
                 updatedAt: client.updatedAt
             }

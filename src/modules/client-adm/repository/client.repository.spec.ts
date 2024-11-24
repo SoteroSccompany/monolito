@@ -1,5 +1,5 @@
 import { Sequelize } from "sequelize-typescript"
-import { ClientModel } from "./client.model"
+import ClientModel from "./client.model"
 import ClientRepository from "./client.repository"
 import Client from "../domain/client.entity"
 import Id from "../../@shared/domain/value-object/id.value-object"
@@ -38,7 +38,7 @@ describe("Client Repository test", () => {
                 "Casa Verde",
                 "Criciúma",
                 "SC",
-                "88888-888"
+                "88888888"
             )
             // address: "Rua 123",
         })
@@ -49,36 +49,37 @@ describe("Client Repository test", () => {
         const clientDb = await ClientModel.findOne({ where: { id: "1" } })
 
         expect(clientDb).toBeDefined()
-        expect(clientDb.id).toEqual(client.id.id)
-        expect(clientDb.name).toEqual(client.name)
-        expect(clientDb.email).toEqual(client.email)
-        expect(clientDb.document).toEqual(client.document)
-        expect(clientDb.street).toEqual(client.address.street)
-        expect(clientDb.number).toEqual(client.address.number)
-        expect(clientDb.complement).toEqual(client.address.complement)
-        expect(clientDb.city).toEqual(client.address.city)
-        expect(clientDb.state).toEqual(client.address.state)
-        expect(clientDb.zipcode).toEqual(client.address.zipCode)
+        expect(clientDb.id).toBe(client.id.id)
+        expect(clientDb.name).toBe(client.name)
+        expect(clientDb.email).toBe(client.email)
+        expect(clientDb.document).toBe(client.document)
+        expect(clientDb.street).toBe(client.address.street)
+        expect(Number(clientDb.number)).toBe(client.address.number)
+        expect(clientDb.complement).toBe(client.address.complement)
+        expect(clientDb.city).toBe(client.address.city)
+        expect(clientDb.state).toBe(client.address.state)
+        expect(clientDb.zipcode).toBe(client.address.zipCode)
         expect(clientDb.createdAt).toStrictEqual(client.createdAt)
         expect(clientDb.updatedAt).toStrictEqual(client.updatedAt)
     })
 
     it("should find a client", async () => {
 
-        const client = await ClientModel.create({
+        const client = {
             id: '1',
             name: 'Lucian',
             email: 'lucian@123.com',
             document: "1234-5678",
             street: "Rua 123",
-            number: "99",
+            number: 99,
             complement: "Casa Verde",
             city: "Criciúma",
             state: "SC",
-            zipcode: "88888-888",
+            zipcode: "88888888",
             createdAt: new Date(),
             updatedAt: new Date()
-        })
+        };
+        await ClientModel.create(client)
 
         const repository = new ClientRepository()
         const result = await repository.find(client.id)

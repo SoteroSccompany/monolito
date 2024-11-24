@@ -4,6 +4,12 @@ import GenerateInvoiceUsecase from "./generate-invoice.usecase";
 import InvoiceItemModel from "../../repository/invoice-item.model";
 import InvoiceModel from "../../repository/invoice.model";
 import InvoiceRepository from "../../repository/invoice.repository";
+import FactoryFacade from "../../factory/facade.factory";
+import ClientAdmFactoryFacade from "../../../client-adm/factory/facade.factory";
+import ClientModel from "../../../client-adm/repository/client.model";
+import Address from "../../../@shared/value-object/address";
+import Client from "../../../client-adm/domain/client.entity";
+import Id from "../../../@shared/domain/value-object/id.value-object";
 
 
 
@@ -18,7 +24,7 @@ describe("Generate invoice usecase integration test", () => {
             sync: { force: true },
             logging: false
         });
-        sequelize.addModels([InvoiceModel, InvoiceItemModel]);
+        sequelize.addModels([ClientModel, InvoiceModel, InvoiceItemModel]);
         await sequelize.sync();
     });
 
@@ -27,17 +33,33 @@ describe("Generate invoice usecase integration test", () => {
     })
 
     it("should generate an invoice", async () => {
+        const address = new Address('street', 123, 'complement', 'city', 'state', '12345678');
+        const client = new Client({
+            id: new Id('c1'),
+            name: 'gabriel',
+            email: 'asdasd@asds.com',
+            document: '654654',
+            address: address
+        })
+        await ClientModel.create({
+            id: client.id.id,
+            name: client.name,
+            email: client.email,
+            document: client.document,
+            street: client.address.street,
+            number: client.address.number,
+            complement: client.address.complement,
+            city: client.address.city,
+            state: client.address.state,
+            zipcode: client.address.zipCode,
+            createdAt: new Date(),
+            updatedAt: new Date()
+        });
         const repository = new InvoiceRepository();
-        const usecase = new GenerateInvoiceUsecase(repository);
+        const clientAdmFacade = ClientAdmFactoryFacade.create();
+        const usecase = new GenerateInvoiceUsecase(repository, clientAdmFacade);
         const input = {
-            name: "Name",
-            document: "Document",
-            street: "Street",
-            number: 123,
-            complement: "Complement",
-            city: "City",
-            state: "State",
-            zipCode: "12345678",
+            clientId: "c1",
             items: [
                 {
                     name: "Item 1",
@@ -47,14 +69,7 @@ describe("Generate invoice usecase integration test", () => {
         }
         const result = await usecase.execute(input);
         expect(result.id).toBeDefined();
-        expect(result.name).toBe("Name");
-        expect(result.document).toBe("Document");
-        expect(result.street).toBe("Street");
-        expect(result.number).toBe(123);
-        expect(result.complement).toBe("Complement");
-        expect(result.city).toBe("City");
-        expect(result.state).toBe("State");
-        expect(result.zipCode).toBe("12345678");
+        expect(result.clientId).toBe("c1");
         expect(result.items.length).toBe(1);
         expect(result.items[0].name).toBe("Item 1");
         expect(result.items[0].price).toBe(100);
@@ -64,14 +79,7 @@ describe("Generate invoice usecase integration test", () => {
             include: [{ model: InvoiceItemModel, as: 'items' }]
         });
         expect(checkDb).toBeDefined();
-        expect(checkDb.name).toBe("Name");
-        expect(checkDb.document).toBe("Document");
-        expect(checkDb.street).toBe("Street");
-        expect(checkDb.number).toBe(123);
-        expect(checkDb.complement).toBe("Complement");
-        expect(checkDb.city).toBe("City");
-        expect(checkDb.state).toBe("State");
-        expect(checkDb.zipCode).toBe("12345678");
+        expect(checkDb.clientId).toBe("c1");
         expect(checkDb.items).toBeDefined();
         expect(checkDb.items.length).toBe(1);
         expect(checkDb.items[0].id).toBeDefined();

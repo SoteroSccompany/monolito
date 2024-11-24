@@ -1,4 +1,5 @@
 import UseCaseInterface from "../../../@shared/usecase/use-case.interface";
+import ClientAdmFacadeInterface from "../../../client-adm/facade/client-adm.facade.interface";
 import InvoiceEntityFactory from "../../domain/factory/entity.factory";
 import InvoiceGateway from "../../gateway/invoice.gateway";
 import { GenerateInvoiceUseCaseInputDto, GenerateInvoiceUseCaseOutputDto } from "./generate-invoice.dto";
@@ -7,24 +8,19 @@ import { GenerateInvoiceUseCaseInputDto, GenerateInvoiceUseCaseOutputDto } from 
 export default class GenerateInvoiceUsecase implements UseCaseInterface {
 
     constructor(
-        private _repositoryInvoice: InvoiceGateway
+        private _repositoryInvoice: InvoiceGateway,
+        private _clientFacade: ClientAdmFacadeInterface
     ) { }
 
 
     async execute(input: GenerateInvoiceUseCaseInputDto): Promise<GenerateInvoiceUseCaseOutputDto> {
         try {
+            await this.validateClient(input.clientId);
             const invoice = InvoiceEntityFactory.create(input);
             await this._repositoryInvoice.add(invoice);
             return {
                 id: invoice.id.id,
-                name: invoice.name,
-                document: invoice.document,
-                street: invoice.address.street,
-                number: invoice.address.number,
-                complement: invoice.address.complement,
-                city: invoice.address.city,
-                state: invoice.address.state,
-                zipCode: invoice.address.zipCode,
+                clientId: invoice.clientId,
                 items: invoice.items.map(item => {
                     return {
                         id: item.id.id,
@@ -36,6 +32,13 @@ export default class GenerateInvoiceUsecase implements UseCaseInterface {
             }
         } catch (error) {
             throw new Error((error as Error).message);
+        }
+    }
+
+    private async validateClient(clientId: string): Promise<void> {
+        const client = await this._clientFacade.find({ clientId });
+        if (!client) {
+            throw new Error("Client not found");
         }
     }
 

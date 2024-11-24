@@ -27,14 +27,7 @@ export default class InvoiceFacade implements InvoiceFacadeInterface {
             return {
                 invoice: {
                     id: invoice.id,
-                    name: invoice.name,
-                    document: invoice.document,
-                    street: invoice.street,
-                    number: invoice.number,
-                    complement: invoice.complement,
-                    city: invoice.city,
-                    state: invoice.state,
-                    zipCode: invoice.zipCode,
+                    clientId: invoice.clientId,
                     items: invoice.items,
                     total: invoice.total
                 }

@@ -1,5 +1,6 @@
-import { Column, HasMany, Model, PrimaryKey, Table } from "sequelize-typescript";
+import { BelongsTo, Column, ForeignKey, HasMany, Model, PrimaryKey, Table } from "sequelize-typescript";
 import InvoiceItemModel from "./invoice-item.model";
+import ClientModel from "../../client-adm/repository/client.model";
 
 @Table({
     tableName: 'invoices',
@@ -12,29 +13,12 @@ export default class InvoiceModel extends Model {
     @Column({ allowNull: false })
     declare id: string;
 
+    @ForeignKey(() => ClientModel)
     @Column({ allowNull: false })
-    declare name: string;
+    declare clientId: string;
 
-    @Column({ allowNull: false })
-    declare document: string;
-
-    @Column({ allowNull: false })
-    declare street: string;
-
-    @Column({ allowNull: false })
-    declare number: number;
-
-    @Column({ allowNull: false })
-    declare complement: string;
-
-    @Column({ allowNull: false })
-    declare city: string;
-
-    @Column({ allowNull: false })
-    declare state: string;
-
-    @Column({ allowNull: false })
-    declare zipCode: string;
+    @BelongsTo(() => ClientModel, { as: 'client' })
+    declare client: ClientModel;
 
     @HasMany(() => InvoiceItemModel, { as: 'items' })
     declare items: InvoiceItemModel[];

@@ -12,14 +12,7 @@ export default class InvoiceRepository implements InvoiceGateway {
         try {
             await InvoiceModel.create({
                 id: invoice.id.id,
-                name: invoice.name,
-                document: invoice.document,
-                street: invoice.address.street,
-                number: invoice.address.number,
-                city: invoice.address.city,
-                complement: invoice.address.complement,
-                state: invoice.address.state,
-                zipCode: invoice.address.zipCode,
+                clientId: invoice.clientId,
                 items: invoice.items.map(item => ({
                     id: item.id.id,
                     name: item.name,

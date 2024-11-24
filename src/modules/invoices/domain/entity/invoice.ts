@@ -9,31 +9,21 @@ import InvoiceItem from "./invoice-item";
 
 export default class Invoice extends BaseEntity implements AggregateRoot {
 
-    private _name: string;
-    private _document: string;
-    private _address: Address;
+    private _clientId: string;
     private _items: InvoiceItem[];
 
-    constructor(name: string, document: string, address: Address, items: InvoiceItem[], id?: Id
+    constructor(clientId: string, items: InvoiceItem[], id?: Id
         , createdAt?: Date, updatedAt?: Date
     ) {
         super(id, createdAt, updatedAt);
-        this._name = name;
-        this._document = document;
-        this._address = address;
+        this._clientId = clientId;
         this._items = items;
         this.validate();
     }
 
     validate(): void {
-        if (!this._name) {
-            throw new Error('Name is required');
-        }
-        if (!this._document) {
-            throw new Error('Document is required');
-        }
-        if (!this._address) {
-            throw new Error('Address is required');
+        if (!this._clientId) {
+            throw new Error('Client is required');
         }
         if (!this._items) {
             throw new Error('Items is required');
@@ -43,16 +33,8 @@ export default class Invoice extends BaseEntity implements AggregateRoot {
         }
     }
 
-    get name(): string {
-        return this._name;
-    }
-
-    get document(): string {
-        return this._document;
-    }
-
-    get address(): Address {
-        return this._address;
+    get clientId(): string {
+        return this._clientId;
     }
 
     get items(): InvoiceItem[] {

@@ -6,6 +6,7 @@ import FindInvoiceUsecase from "../usecase/find-invoice/find-invoice.usecase";
 import InvoiceFacade from "./invoice.facade";
 import GenerateInvoiceUsecase from "../usecase/generate-invoice/generate-invoice.usecase";
 import FactoryFacade from "../factory/facade.factory";
+import ClientAdmFactoryFacade from "../../client-adm/factory/facade.factory";
 
 
 describe("Invoice facade test", () => {
@@ -31,17 +32,11 @@ describe("Invoice facade test", () => {
 
     it("should generate an invoice", async () => {
         const repository = new InvoiceRepository();
-        const generateUsecase = new GenerateInvoiceUsecase(repository)
+        const facadeClientAdm = ClientAdmFactoryFacade.create();
+        const generateUsecase = new GenerateInvoiceUsecase(repository, facadeClientAdm);
         const facade = new InvoiceFacade(generateUsecase, null)
         const invoice = {
-            name: "John Doe",
-            document: "123456789",
-            street: "Main Street",
-            number: 123,
-            complement: "Near the park",
-            city: "Springfield",
-            state: "SP",
-            zipCode: "12345678",
+            clientId: "c1",
             items: [
                 {
                     name: "Item 1",
@@ -55,18 +50,11 @@ describe("Invoice facade test", () => {
         }
         await facade.generateInvoice(invoice);
         const invoiceDb = await InvoiceModel.findOne({
-            where: { document: invoice.document },
+            where: { clientId: invoice.clientId },
             include: [InvoiceItemModel]
         });
         expect(invoiceDb).toBeDefined();
-        expect(invoiceDb.name).toBe(invoice.name);
-        expect(invoiceDb.document).toBe(invoice.document);
-        expect(invoiceDb.street).toBe(invoice.street);
-        expect(invoiceDb.number).toBe(invoice.number);
-        expect(invoiceDb.complement).toBe(invoice.complement);
-        expect(invoiceDb.city).toBe(invoice.city);
-        expect(invoiceDb.state).toBe(invoice.state);
-        expect(invoiceDb.zipCode).toBe(invoice.zipCode);
+        expect(invoiceDb.clientId).toBe(invoice.clientId);
         expect(invoiceDb.items).toBeDefined();
         expect(invoiceDb.items.length).toBe(2);
         expect(invoiceDb.items[0].name).toBe("Item 1");
@@ -80,14 +68,7 @@ describe("Invoice facade test", () => {
     it("should find an invoice", async () => {
         await InvoiceModel.create({
             id: "1",
-            name: "John Doe",
-            document: "123456789",
-            street: "Main Street",
-            number: 123,
-            complement: "Near the park",
-            city: "Springfield",
-            state: "SP",
-            zipCode: "12345678",
+            clientId: "c1",
             items: [
                 {
                     id: "1",
@@ -111,14 +92,7 @@ describe("Invoice facade test", () => {
         expect(invoice).toBeDefined();
         expect(invoice.invoice).toBeDefined();
         expect(invoice.invoice.id).toBe("1");
-        expect(invoice.invoice.name).toBe("John Doe");
-        expect(invoice.invoice.document).toBe("123456789");
-        expect(invoice.invoice.street).toBe("Main Street");
-        expect(invoice.invoice.number).toBe(123);
-        expect(invoice.invoice.complement).toBe("Near the park");
-        expect(invoice.invoice.city).toBe("Springfield");
-        expect(invoice.invoice.state).toBe("SP");
-        expect(invoice.invoice.zipCode).toBe("12345678");
+        expect(invoice.invoice.clientId).toBe("c1");
         expect(invoice.invoice.items).toBeDefined();
         expect(invoice.invoice.items.length).toBe(2);
         expect(invoice.invoice.items[0].name).toBe("Item 1");
@@ -133,14 +107,7 @@ describe("Invoice facade test", () => {
     it("should generate an invoice with factory", async () => {
         const facade = FactoryFacade.create();
         const invoice = {
-            name: "John Doe",
-            document: "123456789",
-            street: "Main Street",
-            number: 123,
-            complement: "Near the park",
-            city: "Springfield",
-            state: "SP",
-            zipCode: "12345678",
+            clientId: "c1",
             items: [
                 {
                     name: "Item 1",
@@ -154,18 +121,11 @@ describe("Invoice facade test", () => {
         }
         await facade.generateInvoice(invoice);
         const invoiceDb = await InvoiceModel.findOne({
-            where: { document: invoice.document },
+            where: { clientId: invoice.clientId },
             include: [InvoiceItemModel]
         });
         expect(invoiceDb).toBeDefined();
-        expect(invoiceDb.name).toBe(invoice.name);
-        expect(invoiceDb.document).toBe(invoice.document);
-        expect(invoiceDb.street).toBe(invoice.street);
-        expect(invoiceDb.number).toBe(invoice.number);
-        expect(invoiceDb.complement).toBe(invoice.complement);
-        expect(invoiceDb.city).toBe(invoice.city);
-        expect(invoiceDb.state).toBe(invoice.state);
-        expect(invoiceDb.zipCode).toBe(invoice.zipCode);
+        expect(invoiceDb.clientId).toBe(invoice.clientId);
         expect(invoiceDb.items).toBeDefined();
         expect(invoiceDb.items.length).toBe(2);
         expect(invoiceDb.items[0].name).toBe("Item 1");
@@ -179,14 +139,7 @@ describe("Invoice facade test", () => {
     it("should find an invoice with factory", async () => {
         await InvoiceModel.create({
             id: "1",
-            name: "John Doe",
-            document: "123456789",
-            street: "Main Street",
-            number: 123,
-            complement: "Near the park",
-            city: "Springfield",
-            state: "SP",
-            zipCode: "12345678",
+            clientId: "c1",
             items: [
                 {
                     id: "1",
@@ -208,14 +161,7 @@ describe("Invoice facade test", () => {
         expect(invoice).toBeDefined();
         expect(invoice.invoice).toBeDefined();
         expect(invoice.invoice.id).toBe("1");
-        expect(invoice.invoice.name).toBe("John Doe");
-        expect(invoice.invoice.document).toBe("123456789");
-        expect(invoice.invoice.street).toBe("Main Street");
-        expect(invoice.invoice.number).toBe(123);
-        expect(invoice.invoice.complement).toBe("Near the park");
-        expect(invoice.invoice.city).toBe("Springfield");
-        expect(invoice.invoice.state).toBe("SP");
-        expect(invoice.invoice.zipCode).toBe("12345678");
+        expect(invoice.invoice.clientId).toBe("c1");
         expect(invoice.invoice.items).toBeDefined();
         expect(invoice.invoice.items.length).toBe(2);
         expect(invoice.invoice.items[0].name).toBe("Item 1");

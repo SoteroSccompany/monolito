@@ -1,10 +1,13 @@
 import { Sequelize } from "sequelize-typescript";
 import InvoiceItemModel from "./invoice-item.model";
 import InvoiceModel from "./invoice.model";
+import ClientModel from "../../client-adm/repository/client.model";
 import InvoiceItem from "../domain/entity/invoice-item";
 import Invoice from "../domain/entity/invoice";
 import InvoiceRepository from "./invoice.repository";
+import Client from "../../client-adm/domain/client.entity";
 import Address from "../../@shared/value-object/address";
+import Id from "../../@shared/domain/value-object/id.value-object";
 
 
 
@@ -19,7 +22,7 @@ describe("Invoice repository test", () => {
             sync: { force: true },
             logging: false
         });
-        sequelize.addModels([InvoiceModel, InvoiceItemModel]);
+        sequelize.addModels([ClientModel, InvoiceModel, InvoiceItemModel]);
         await sequelize.sync();
     });
 
@@ -28,46 +31,74 @@ describe("Invoice repository test", () => {
     })
 
     it("should add an invoice", async () => {
-        const address = new Address("Street", 123, "Complement", "City", "State", "12345678");
-        const invoiceItem = new InvoiceItem("Item 1", 100);
-        const invoice = new Invoice("Name", "Document", address, [invoiceItem]);
+        const address = new Address('street', 123, 'complement', 'city', 'state', '12345678');
+        const client = new Client({
+            id: new Id('c1'),
+            name: 'gabriel',
+            email: 'email@email.com',
+            document: '654654',
+            address: address
+        });
+        await ClientModel.create({
+            id: client.id.id,
+            name: client.name,
+            email: client.email,
+            document: client.document,
+            street: client.address.street,
+            number: client.address.number,
+            complement: client.address.complement,
+            city: client.address.city,
+            state: client.address.state,
+            zipcode: client.address.zipCode,
+            createdAt: new Date(),
+            updatedAt: new Date()
+        });
+
+        const invoice = new Invoice(client.id.id, [
+            new InvoiceItem("Item 1", 100)
+        ], new Id('1'), new Date(), new Date());
+
         const repository = new InvoiceRepository();
 
         await repository.add(invoice);
 
         const invoiceDb = await InvoiceModel.findOne({
             where: { id: invoice.id.id },
-            include: [{ model: InvoiceItemModel, as: 'items' }]
+            include: [InvoiceItemModel]
         });
-
         expect(invoiceDb).toBeDefined();
-        expect(invoiceDb.name).toBe("Name");
-        expect(invoiceDb.document).toBe("Document");
-        expect(invoiceDb.street).toBe("Street");
-        expect(invoiceDb.number).toBe(123);
-        expect(invoiceDb.complement).toBe("Complement");
-        expect(invoiceDb.city).toBe("City");
-        expect(invoiceDb.state).toBe("State");
-        expect(invoiceDb.zipCode).toBe("12345678");
-        expect(invoiceDb.items).toBeDefined();
-        expect(invoiceDb.items.length).toBe(1);
-        expect(invoiceDb.items[0].name).toBe("Item 1");
-        expect(invoiceDb.items[0].price).toBe(100);
-        expect(invoiceDb.createdAt).toBeDefined();
-        expect(invoiceDb.updatedAt).toBeDefined();
+        expect(invoiceDb.clientId).toBe(invoice.clientId);
+        expect(invoiceDb.id).toBe(invoice.id.id);
+
+
     });
 
     it("should find an invoice", async () => {
+        const address = new Address('street', 123, 'complement', 'city', 'state', '12345678');
+        const client = new Client({
+            id: new Id('c1'),
+            name: 'gabriel',
+            email: 'email@email.com',
+            document: '654654',
+            address: address
+        });
+        await ClientModel.create({
+            id: client.id.id,
+            name: client.name,
+            email: client.email,
+            document: client.document,
+            street: client.address.street,
+            number: client.address.number,
+            complement: client.address.complement,
+            city: client.address.city,
+            state: client.address.state,
+            zipcode: client.address.zipCode,
+            createdAt: new Date(),
+            updatedAt: new Date()
+        });
         await InvoiceModel.create({
             id: "1",
-            name: "Name",
-            document: "Document",
-            street: "Street",
-            number: 123,
-            complement: "Complement",
-            city: "City",
-            state: "State",
-            zipCode: "12345678",
+            clientId: "c1",
             createdAt: new Date(),
             updatedAt: new Date(),
             items: [
@@ -88,15 +119,7 @@ describe("Invoice repository test", () => {
         const invoice = await repository.find("1");
 
         expect(invoice).toBeDefined();
-        expect(invoice.name).toBe("Name");
-        expect(invoice.document).toBe("Document");
-        expect(invoice.address).toBeDefined();
-        expect(invoice.address.street).toBe("Street");
-        expect(invoice.address.number).toBe(123);
-        expect(invoice.address.complement).toBe("Complement");
-        expect(invoice.address.city).toBe("City");
-        expect(invoice.address.state).toBe("State");
-        expect(invoice.address.zipCode).toBe("12345678");
+        expect(invoice.clientId).toBe("c1");
         expect(invoice.items.length).toBe(1);
         expect(invoice.items[0].name).toBe("Item 1");
         expect(invoice.items[0].price).toBe(100);

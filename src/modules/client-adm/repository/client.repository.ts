@@ -3,7 +3,7 @@ import Id from "../../@shared/domain/value-object/id.value-object";
 import Address from "../../@shared/value-object/address";
 import Client from "../domain/client.entity";
 import ClientGateway from "../gateway/client.gateway";
-import { ClientModel } from "./client.model";
+import ClientModel from "./client.model";
 
 export default class ClientRepository implements ClientGateway {
 
@@ -40,7 +40,7 @@ export default class ClientRepository implements ClientGateway {
             document: client.document,
             address: new Address(
                 client.street,
-                parseInt(client.number),
+                Number(client.number),
                 client.complement,
                 client.city,
                 client.state,

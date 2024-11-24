@@ -6,14 +6,7 @@ interface FindInvoiceInputDto {
 
 interface FindInvoiceOutputDto {
     id: string;
-    name: string;
-    document: string;
-    street: string;
-    number: number;
-    complement: string;
-    city: string;
-    state: string;
-    zipCode: string;
+    clientId: string;
     items: {
         id: string;
         name: string;

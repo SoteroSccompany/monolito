@@ -8,21 +8,22 @@ const MockRepository = () => {
     }
 }
 
+const MockFacadeUserAdm = () => {
+    return {
+        find: jest.fn().mockResolvedValue({ clientId: "c1", name: "Name" }),
+        add: jest.fn()
+    }
+}
+
 
 describe("Generate invoice usecase unit test", () => {
 
     it("should generate an invoice", async () => {
         const repository = MockRepository();
-        const usecase = new GenerateInvoiceUsecase(repository);
+        const facade = MockFacadeUserAdm();
+        const usecase = new GenerateInvoiceUsecase(repository, facade);
         const input = {
-            name: "Name",
-            document: "Document",
-            street: "Street",
-            number: 123,
-            complement: "Complement",
-            city: "City",
-            state: "State",
-            zipCode: "12345678",
+            clientId: "c1",
             items: [
                 {
                     name: "Item 1",
@@ -32,15 +33,9 @@ describe("Generate invoice usecase unit test", () => {
         }
         const result = await usecase.execute(input);
         expect(repository.add).toHaveBeenCalled();
+        expect(facade.find).toHaveBeenCalled();
         expect(result.id).toBeDefined();
-        expect(result.name).toBe("Name");
-        expect(result.document).toBe("Document");
-        expect(result.street).toBe("Street");
-        expect(result.number).toBe(123);
-        expect(result.complement).toBe("Complement");
-        expect(result.city).toBe("City");
-        expect(result.state).toBe("State");
-        expect(result.zipCode).toBe("12345678");
+        expect(result.clientId).toBe("c1");
         expect(result.items.length).toBe(1);
         expect(result.items[0].name).toBe("Item 1");
         expect(result.items[0].price).toBe(100);
@@ -48,4 +43,32 @@ describe("Generate invoice usecase unit test", () => {
 
     });
 
+    it("should throw an error when client not found", async () => {
+        const repository = MockRepository();
+        const facade = MockFacadeUserAdm();
+        facade.find.mockResolvedValue(null);
+        const usecase = new GenerateInvoiceUsecase(repository, facade);
+        const mockFunctionValidate = jest
+            //@ts-expect-error spy on private method
+            .spyOn(usecase, 'validateClient')
+            //@ts-expect-error - not return never
+            .mockRejectedValue(new Error("Client not found"));
+
+        //@ts-expect-error force set clientFacade
+        usecase["_facadeUserAdm"] = mockFunctionValidate;
+
+        const input = {
+            clientId: "c1",
+            items: [
+                {
+                    name: "Item 1",
+                    price: 100
+                }
+            ]
+        }
+        await expect(usecase.execute(input)).rejects.toThrow(new Error('Client not found'));
+        expect(mockFunctionValidate).toHaveBeenCalled();
+
+
+    });
 });

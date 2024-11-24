@@ -9,7 +9,8 @@ const client = new Client({
     id: new Id('123'),
     name: "John Doe",
     email: "asdasdsd",
-    address: new Address("street", 123, "complement", "city", "state", "zipCode"),
+    document: "123123123",
+    address: new Address("street", 123, "complement", "city", "state", "30770400"),
 });
 
 
@@ -30,7 +31,12 @@ describe("find client usecase unit test", () => {
         expect(result.id).toBe(client.id.id);
         expect(result.name).toBe(client.name);
         expect(result.email).toBe(client.email);
-        expect(result.address).toBe(client.address);
+        expect(result.address.street).toBe(client.address.street);
+        expect(result.address.number).toBe(client.address.number);
+        expect(result.address.complement).toBe(client.address.complement);
+        expect(result.address.city).toBe(client.address.city);
+        expect(result.address.state).toBe(client.address.state);
+        expect(result.address.zipCode).toBe(client.address.zipCode);
         expect(result.createdAt).toBe(client.createdAt);
         expect(result.updatedAt).toBe(client.updatedAt);
     });

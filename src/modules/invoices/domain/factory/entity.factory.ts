@@ -5,14 +5,7 @@ import InvoiceItem from "../entity/invoice-item";
 
 type InvoiceFactoryProps = {
     id?: string,
-    name: string,
-    document: string,
-    street: string,
-    number: number,
-    complement: string,
-    city: string,
-    state: string,
-    zipCode: string
+    clientId: string,
     items: {
         id?: string,
         name: string,
@@ -29,9 +22,8 @@ export default class InvoiceEntityFactory {
 
     static create(input: InvoiceFactoryProps): Invoice {
         try {
-            const address = new Address(input.street, input.number, input.complement, input.city, input.state, input.zipCode);
             const items = input.items.map(item => new InvoiceItem(item.name, item.price));
-            return new Invoice(input.name, input.document, address, items, new Id(input.id), input.createdAt, input.updatedAt);
+            return new Invoice(input.clientId, items, new Id(input.id), input.createdAt, input.updatedAt);
         } catch (error) {
             throw new Error((error as Error).message);
         }

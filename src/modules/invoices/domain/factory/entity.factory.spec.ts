@@ -8,14 +8,7 @@ describe("Entity factory test", () => {
 
     it("should create a invoice", () => {
         const invoice = InvoiceEntityFactory.create({
-            name: 'John Doe',
-            document: '123456789',
-            street: 'Rua 1',
-            number: 123,
-            complement: 'Casa',
-            city: 'Cidade',
-            state: 'Estado',
-            zipCode: '12345678',
+            clientId: 'c1',
             items: [
                 {
                     name: 'Item 1',
@@ -29,11 +22,13 @@ describe("Entity factory test", () => {
         });
 
         expect(invoice).toBeInstanceOf(Invoice);
-        expect(invoice.name).toBe('John Doe');
-        expect(invoice.document).toBe('123456789');
-        expect(invoice.address).toBeInstanceOf(Address);
         expect(invoice.items).toHaveLength(2);
-
+        expect(invoice.clientId).toBe("c1");
+        expect(invoice.items[0].name).toBe("Item 1");
+        expect(invoice.items[0].price).toBe(100);
+        expect(invoice.items[1].name).toBe("Item 2");
+        expect(invoice.items[1].price).toBe(200);
+        expect(invoice.id).toBeDefined();
 
     })
 

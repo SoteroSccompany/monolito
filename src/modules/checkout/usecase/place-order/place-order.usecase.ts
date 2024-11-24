@@ -1,5 +1,6 @@
 import Id from "../../../@shared/domain/value-object/id.value-object";
 import UseCaseInterface from "../../../@shared/usecase/use-case.interface";
+import Address from "../../../@shared/value-object/address";
 import ClientAdmFacadeInterface from "../../../client-adm/facade/client-adm.facade.interface";
 import ProductAdmFacadeInterface from "../../../product-adm/facade/product-adm.facade.interface";
 import StoreCatalogFacadeInterface from "../../../store-catalog/facade/store-catalog.interface";
@@ -37,7 +38,7 @@ export default class PlaceOrderUseCase implements UseCaseInterface {
                 id: new Id(client.clientId),
                 name: client.name,
                 email: client.email,
-                address: client.address
+                address: new Address(client.address.street, client.address.number, client.address.complement, client.address.city, client.address.state, client.address.zipCode)
             })
             const order = new Order({
                 client: myClient,

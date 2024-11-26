@@ -1,9 +1,9 @@
 import { Sequelize } from "sequelize-typescript";
-import ClientAdmFactoryFacade from "../factory/facade.factory";
 import InvoiceItemModel from "../../invoices/repository/invoice-item.model";
 import InvoiceModel from "../../invoices/repository/invoice.model";
 import ClientModel from "../repository/client.model";
 import Address from "../../@shared/value-object/address";
+import ClientAdmFactoryFacade from "../factory/facade.factory";
 
 
 
@@ -54,7 +54,7 @@ describe("Cliente adm facade unit test", () => {
 
     it("should find a client", async () => {
         ClientModel.create({
-            id: "1",
+            id: "2",
             name: "Client 1",
             email: "client@test",
             document: "123123123",
@@ -69,7 +69,7 @@ describe("Cliente adm facade unit test", () => {
         });
 
         const facade = ClientAdmFactoryFacade.create();
-        const input = { clientId: "1" };
+        const input = { clientId: "2" };
         const client = await facade.find(input);
         expect(client).toBeDefined();
         expect(client.clientId).toBe(input.clientId);

@@ -2,9 +2,9 @@
 import { Sequelize } from "sequelize-typescript";
 import InvoiceItemModel from "../../repository/invoice-item.model";
 import InvoiceModel from "../../repository/invoice.model";
+import ClientModel from "../../../client-adm/repository/client.model";
 import InvoiceRepository from "../../repository/invoice.repository";
 import Invoice from "../../domain/entity/invoice";
-import Address from "../../../@shared/value-object/address";
 import InvoiceItem from "../../domain/entity/invoice-item";
 import Id from "../../../@shared/domain/value-object/id.value-object";
 import FindInvoiceUsecase from "./find-invoice.usecase";
@@ -22,7 +22,7 @@ describe("Find invoice usecase integration test", () => {
             sync: { force: true },
             logging: false
         });
-        sequelize.addModels([InvoiceModel, InvoiceItemModel]);
+        sequelize.addModels([ClientModel, InvoiceModel, InvoiceItemModel]);
         await sequelize.sync();
     });
 
@@ -31,6 +31,22 @@ describe("Find invoice usecase integration test", () => {
     })
 
     it("should generate an invoice", async () => {
+
+        const client = {
+            id: 'c1',
+            name: 'Lucian',
+            email: 'lucian@123.com',
+            document: "1234-5678",
+            street: "Rua 123",
+            number: 99,
+            complement: "Casa Verde",
+            city: "Criciúma",
+            state: "SC",
+            zipcode: "88888888",
+            createdAt: new Date(),
+            updatedAt: new Date()
+        };
+        await ClientModel.create(client)
 
         const invoice = new Invoice("c1", [
             new InvoiceItem("Item 1", 100)

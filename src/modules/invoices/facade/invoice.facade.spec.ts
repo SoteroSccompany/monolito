@@ -1,6 +1,7 @@
 import { Sequelize } from "sequelize-typescript";
 import InvoiceItemModel from "../repository/invoice-item.model";
 import InvoiceModel from "../repository/invoice.model";
+import ClientModel from "../../client-adm/repository/client.model";
 import InvoiceRepository from "../repository/invoice.repository";
 import FindInvoiceUsecase from "../usecase/find-invoice/find-invoice.usecase";
 import InvoiceFacade from "./invoice.facade";
@@ -22,7 +23,7 @@ describe("Invoice facade test", () => {
             sync: { force: true },
             logging: false
         });
-        sequelize.addModels([InvoiceModel, InvoiceItemModel]);
+        sequelize.addModels([ClientModel, InvoiceModel, InvoiceItemModel]);
         await sequelize.sync();
     });
 
@@ -35,6 +36,21 @@ describe("Invoice facade test", () => {
         const facadeClientAdm = ClientAdmFactoryFacade.create();
         const generateUsecase = new GenerateInvoiceUsecase(repository, facadeClientAdm);
         const facade = new InvoiceFacade(generateUsecase, null)
+        const client = {
+            id: 'c1',
+            name: 'Lucian',
+            email: 'lucian@123.com',
+            document: "1234-5678",
+            street: "Rua 123",
+            number: 99,
+            complement: "Casa Verde",
+            city: "Criciúma",
+            state: "SC",
+            zipcode: "88888888",
+            createdAt: new Date(),
+            updatedAt: new Date()
+        };
+        await ClientModel.create(client)
         const invoice = {
             clientId: "c1",
             items: [
@@ -46,7 +62,10 @@ describe("Invoice facade test", () => {
                     name: "Item 2",
                     price: 200
                 }
-            ]
+            ],
+            total: 300,
+            createdAt: new Date(),
+            updatedAt: new Date()
         }
         await facade.generateInvoice(invoice);
         const invoiceDb = await InvoiceModel.findOne({
@@ -66,6 +85,21 @@ describe("Invoice facade test", () => {
 
 
     it("should find an invoice", async () => {
+        const client = {
+            id: 'c1',
+            name: 'Lucian',
+            email: 'lucian@123.com',
+            document: "1234-5678",
+            street: "Rua 123",
+            number: 99,
+            complement: "Casa Verde",
+            city: "Criciúma",
+            state: "SC",
+            zipcode: "88888888",
+            createdAt: new Date(),
+            updatedAt: new Date()
+        };
+        await ClientModel.create(client)
         await InvoiceModel.create({
             id: "1",
             clientId: "c1",
@@ -106,6 +140,22 @@ describe("Invoice facade test", () => {
 
     it("should generate an invoice with factory", async () => {
         const facade = FactoryFacade.create();
+
+        const client = {
+            id: 'c1',
+            name: 'Lucian',
+            email: 'lucian@123.com',
+            document: "1234-5678",
+            street: "Rua 123",
+            number: 99,
+            complement: "Casa Verde",
+            city: "Criciúma",
+            state: "SC",
+            zipcode: "88888888",
+            createdAt: new Date(),
+            updatedAt: new Date()
+        };
+        await ClientModel.create(client)
         const invoice = {
             clientId: "c1",
             items: [
@@ -117,7 +167,10 @@ describe("Invoice facade test", () => {
                     name: "Item 2",
                     price: 200
                 }
-            ]
+            ],
+            total: 300,
+            createdAt: new Date(),
+            updatedAt: new Date()
         }
         await facade.generateInvoice(invoice);
         const invoiceDb = await InvoiceModel.findOne({
@@ -137,6 +190,22 @@ describe("Invoice facade test", () => {
 
 
     it("should find an invoice with factory", async () => {
+
+        const client = {
+            id: 'c1',
+            name: 'Lucian',
+            email: 'lucian@123.com',
+            document: "1234-5678",
+            street: "Rua 123",
+            number: 99,
+            complement: "Casa Verde",
+            city: "Criciúma",
+            state: "SC",
+            zipcode: "88888888",
+            createdAt: new Date(),
+            updatedAt: new Date()
+        };
+        await ClientModel.create(client)
         await InvoiceModel.create({
             id: "1",
             clientId: "c1",
@@ -151,7 +220,10 @@ describe("Invoice facade test", () => {
                     name: "Item 2",
                     price: 200
                 }
-            ]
+            ],
+            total: 300,
+            createdAt: new Date(),
+            updatedAt: new Date()
         },
             {
                 include: [InvoiceItemModel]

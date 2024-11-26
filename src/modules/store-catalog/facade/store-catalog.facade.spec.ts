@@ -31,7 +31,9 @@ describe("Product repository test", () => {
             id: '1',
             name: 'product',
             description: 'product description',
-            salesPrice: 10
+            salesPrice: 10,
+            createdAt: new Date(),
+            updatedAt: new Date()
         })
         const result = await facade.find({ id: '1' });
         expect(result.id).toBe('1');
@@ -46,13 +48,17 @@ describe("Product repository test", () => {
             id: '1',
             name: 'product',
             description: 'product description',
-            salesPrice: 10
+            salesPrice: 10,
+            createdAt: new Date(),
+            updatedAt: new Date()
         })
         await ProductModel.create({
             id: '2',
             name: 'product2',
             description: 'product description2',
-            salesPrice: 20
+            salesPrice: 20,
+            createdAt: new Date(),
+            updatedAt: new Date()
         })
         const result = await facade.findAll();
         expect(result.products.length).toBe(2);

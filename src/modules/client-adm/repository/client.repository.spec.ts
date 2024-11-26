@@ -1,4 +1,6 @@
 import { Sequelize } from "sequelize-typescript"
+import InvoiceItemModel from "../../invoices/repository/invoice-item.model"
+import InvoiceModel from "../../invoices/repository/invoice.model"
 import ClientModel from "./client.model"
 import ClientRepository from "./client.repository"
 import Client from "../domain/client.entity"
@@ -17,7 +19,7 @@ describe("Client Repository test", () => {
             sync: { force: true }
         })
 
-        sequelize.addModels([ClientModel])
+        sequelize.addModels([ClientModel, InvoiceModel, InvoiceItemModel])
         await sequelize.sync()
     })
 

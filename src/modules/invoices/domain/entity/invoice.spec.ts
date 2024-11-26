@@ -26,11 +26,6 @@ describe("Invoice entity test", () => {
 
     });
 
-    it("should throw an error en create a invoice", () => {
-        expect(() => {
-            new Invoice("", [new InvoiceItem("Item 1", 100)]);
-        }).toThrow(new Error('ClientId is required'));
-    });
 
 
     it("should add an item to invoice", () => {

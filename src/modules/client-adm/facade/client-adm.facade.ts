@@ -29,7 +29,7 @@ export default class ClientAdmFacade implements ClientAdmFacadeInterface {
             name: client.name,
             email: client.email,
             document: client.document,
-            address: new Address(client.address.street, client.address.number, client.address.state, client.address.city, client.address.state, client.address.zipCode),
+            address: new Address(client.address.street, client.address.number, client.address.complement, client.address.city, client.address.state, client.address.zipCode),
             createdAt: client.createdAt,
             updatedAt: client.updatedAt
         }

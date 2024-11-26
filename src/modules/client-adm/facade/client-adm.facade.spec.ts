@@ -1,5 +1,7 @@
 import { Sequelize } from "sequelize-typescript";
 import ClientAdmFactoryFacade from "../factory/facade.factory";
+import InvoiceItemModel from "../../invoices/repository/invoice-item.model";
+import InvoiceModel from "../../invoices/repository/invoice.model";
 import ClientModel from "../repository/client.model";
 import Address from "../../@shared/value-object/address";
 
@@ -17,7 +19,7 @@ describe("Cliente adm facade unit test", () => {
             sync: { force: true }
         });
 
-        await sequelize.addModels([ClientModel]);
+        await sequelize.addModels([ClientModel, InvoiceModel, InvoiceItemModel]);
         await sequelize.sync();
     });
 

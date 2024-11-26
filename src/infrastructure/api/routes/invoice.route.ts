@@ -14,7 +14,7 @@ invoiceRoute.get('/:id', async (req: Request, res: Response) => {
         const input = {
             id: req.params.id
         }
-        if (input.id === undefined || input.id === null || input.id === '') {
+        if (input.id === undefined || input.id === null || input.id === 'undefined' || input.id === '') {
             error = true;
             msg = 'id is required';
         }

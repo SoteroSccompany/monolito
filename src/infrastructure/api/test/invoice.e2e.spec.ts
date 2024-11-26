@@ -63,6 +63,10 @@ describe("End to end test invoice", () => {
             });
         expect(product.status).toBe(200);
 
+        const productActive = await request(app)
+            .get(`/products/${product.body.id}`);
+        expect(productActive.status).toBe(200);
+
 
         const order = await request(app)
             .post("/checkout")
@@ -71,7 +75,6 @@ describe("End to end test invoice", () => {
                 products: [{ productId: product.body.id }]
             });
         expect(order.status).toBe(200);
-        console.log(order);
 
         const invoice = await request(app)
             .get(`/invoices/${order.body.invoiceId}`);

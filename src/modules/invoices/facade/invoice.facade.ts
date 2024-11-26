@@ -16,7 +16,7 @@ export default class InvoiceFacade implements InvoiceFacadeInterface {
         try {
             const invoice = await this._generateInvoice.execute(input);
             return {
-                id: invoice.id.id,
+                id: invoice.id,
                 clientId: invoice.clientId,
                 items: invoice.items
             }

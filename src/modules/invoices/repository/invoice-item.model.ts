@@ -4,8 +4,7 @@ import InvoiceModel from "./invoice.model";
 
 @Table({
     tableName: 'invoice_items',
-    timestamps: true,
-    paranoid: true
+    timestamps: true
 })
 export default class InvoiceItemModel extends Model {
 
@@ -32,7 +31,7 @@ export default class InvoiceItemModel extends Model {
     @BelongsTo(() => InvoiceModel, { as: 'invoice' })
     declare invoice: InvoiceModel;
 
-    @Column({ allowNull: true })
-    declare deletedAt?: Date; // Paranoid
+    // @Column({ allowNull: true })
+    // declare deletedAt?: Date; // Paranoid
 
 }

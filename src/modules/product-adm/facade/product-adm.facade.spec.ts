@@ -70,6 +70,24 @@ describe('ProductAdmFacade test', () => {
         expect(result.stock).toBe(input.stock);
     });
 
+    it("should find a product ", async () => {
+        const productFacade = ProductAdmFacadeFactory.create();
+        const input = {
+            id: "1",
+            name: "Product 1",
+            description: "Description 1",
+            purchasePrice: 10,
+            stock: 10
+        }
+        await productFacade.addProduct(input);
+        const result = await productFacade.findProduct({ productId: input.id });
+        expect(result.id).toBe(input.id);
+        expect(result.name).toBe(input.name);
+        expect(result.description).toBe(input.description);
+        expect(result.purchasePrice).toBe(input.purchasePrice);
+        expect(result.stock).toBe(input.stock);
+    });
+
 
 
 });

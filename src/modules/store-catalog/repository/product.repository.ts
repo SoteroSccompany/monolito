@@ -42,4 +42,16 @@ export default class ProductRepository implements ProductGateway {
         }
     }
 
+    async update(product: Product): Promise<void> {
+        try {
+            await ProductModel.update({
+                name: product.name,
+                description: product.description,
+                salesPrice: product.salesPrice
+            }, { where: { id: product.id.id } });
+        } catch (error) {
+            throw new Error((error as Error).message)
+        }
+    }
+
 }

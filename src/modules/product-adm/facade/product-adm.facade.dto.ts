@@ -16,3 +16,17 @@ export interface CheckStockFacadeOutputDto {
     productId: string;
     stock: number;
 }
+
+export interface GetProductFacdeInputDto {
+    productId: string;
+}
+
+export interface GetProductFacdeOutputDto {
+    id: string;
+    name: string;
+    description: string;
+    purchasePrice: number;
+    stock: number;
+    createdAt: Date;
+    updatedAt: Date;
+}

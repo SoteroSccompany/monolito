@@ -5,7 +5,6 @@ import ClientModel from "../../client-adm/repository/client.model";
 @Table({
     tableName: 'invoices',
     timestamps: true,
-    paranoid: true
 })
 export default class InvoiceModel extends Model {
 
@@ -29,7 +28,7 @@ export default class InvoiceModel extends Model {
     @Column({ allowNull: false })
     declare updatedAt: Date;
 
-    @Column({ allowNull: true })
-    declare deletedAt?: Date; // Paranoid
+    // @Column({ allowNull: true })
+    // declare deletedAt?: Date; // Paranoid
 
 }

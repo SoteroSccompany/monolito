@@ -33,8 +33,6 @@ export default class AddProductUseCase implements UseCaseInterface {
                 createdAt: product.createdAt,
                 updatedAt: product.updatedAt
             }
-
-
         } catch (error) {
             throw new Error((error as Error).message);
         }

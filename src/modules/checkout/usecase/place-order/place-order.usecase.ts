@@ -86,6 +86,7 @@ export default class PlaceOrderUseCase implements UseCaseInterface {
                 })
             }
         } catch (error) {
+            console.log(error)
             throw new Error((error as Error).message)
         }
     }
@@ -111,6 +112,9 @@ export default class PlaceOrderUseCase implements UseCaseInterface {
             const product = await this._catalogFacade.find({ id: productId });
             if (!product) {
                 throw new Error("Product not found");
+            }
+            if (product.salesPrice === null) {
+                throw new Error("Product is not available for sale")
             }
             const productProps = {
                 id: new Id(product.id),

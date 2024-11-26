@@ -2,7 +2,7 @@ import { Column, HasMany, Model, PrimaryKey, Table } from "sequelize-typescript"
 import InvoiceModel from "../../invoices/repository/invoice.model";
 
 @Table({
-    tableName: 'client',
+    tableName: 'clients',
     timestamps: false
 })
 export default class ClientModel extends Model {

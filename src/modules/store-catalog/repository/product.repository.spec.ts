@@ -1,6 +1,8 @@
 import { Sequelize } from "sequelize-typescript";
 import ProductModel from "./product.model";
 import ProductRepository from "./product.repository";
+import Product from "../domain/product.entity";
+import Id from "../../@shared/domain/value-object/id.value-object";
 
 
 
@@ -31,14 +33,18 @@ describe("Product repository test", () => {
             id: '1',
             name: 'product',
             description: 'product description',
-            salesPrice: 10
+            salesPrice: 10,
+            createdAt: new Date(),
+            updatedAt: new Date()
         });
 
         await ProductModel.create({
             id: '2',
             name: 'product',
             description: 'product description',
-            salesPrice: 10
+            salesPrice: 10,
+            createdAt: new Date(),
+            updatedAt: new Date()
         });
 
         const productRepository = new ProductRepository();
@@ -61,7 +67,9 @@ describe("Product repository test", () => {
             id: '3',
             name: 'product',
             description: 'product test',
-            salesPrice: 10
+            salesPrice: 10,
+            createdAt: new Date(),
+            updatedAt: new Date()
         });
 
         const productRepository = new ProductRepository();
@@ -71,6 +79,35 @@ describe("Product repository test", () => {
         expect(product.name).toBe('product');
         expect(product.description).toBe('product test');
         expect(product.salesPrice).toBe(10);
+    });
+
+    it("should update a product", async () => {
+
+        await ProductModel.create({
+            id: '4',
+            name: 'product',
+            description: 'product test',
+            salesPrice: 10,
+            createdAt: new Date(),
+            updatedAt: new Date()
+        });
+
+        const productRepository = new ProductRepository();
+        const product = new Product({
+            id: new Id('4'),
+            name: 'product updated',
+            description: 'product updated',
+            salesPrice: 20
+        })
+
+        await productRepository.update(product);
+
+        const productUpdated = await productRepository.find('4');
+
+        expect(productUpdated.id.id).toBe('4');
+        expect(productUpdated.name).toBe('product updated');
+        expect(productUpdated.description).toBe('product updated');
+        expect(productUpdated.salesPrice).toBe(20);
     });
 
 
